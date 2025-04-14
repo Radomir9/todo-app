@@ -38,22 +38,10 @@
 
     <section>
       <h3>TODO LIST</h3>
-      <div>
-
+      <div v-for="todo in todos">
         <div>
-          <label>
-            <input type="checkbox" />
-          </label>
-
-          <div>
-            <input type="text" />
-          </div>
-
-          <div>
-            <button>Delete</button>
-          </div>
+          {{ todo.content }}
         </div>
-
       </div>
     </section>
 
