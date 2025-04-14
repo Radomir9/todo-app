@@ -1,16 +1,17 @@
 <template>
   <main>
 
-    <section>
+    <section class="greeting">
       <h2>
-        What's up, <input type="text" id="name" placeholder="Name here">
+        What's up, <input type="text" id="name" placeholder="Name here" v-model="name">
       </h2>
+      
     </section>
 
     <section>
       <h3>CREATE A TODO</h3>
 
-      <form>
+      <form> 
         <h4>What's on your todo list?</h4>
         <input type="text" name="content" id="content" placeholder="e.g. make a video" />
 
@@ -60,10 +61,20 @@
 </template>
 
 
-<script>
-export default {
-  name: 'App',
-};
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+
+const name = ref('')
+
+
+watch(name, (newVal) => {
+  localStorage.setItem('name', newVal)
+})
+
+onMounted(() => {
+  name.value = localStorage.getItem('name') || ''
+}) 
+
 </script>
 
 <style scoped></style>
