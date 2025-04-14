@@ -42,6 +42,7 @@
         <div>
           {{ todo.content }}
         </div>
+        <button @click="removeToDo(todo)">Delete</button>
       </div>
     </section>
 
@@ -63,8 +64,11 @@ watch(name, (newVal) => {
   localStorage.setItem('name', newVal)
 })
 
+
+
 onMounted(() => {
   name.value = localStorage.getItem('name') || ''
+  
 }) 
 
 const addTodo = () => {
@@ -79,6 +83,10 @@ const addTodo = () => {
 
   input_category.value = null
   input_content.value = ''
+}
+
+const removeToDo = (todo) => {
+  todos.value = todos.value.filter((t) => t !== todo)
 }
 </script>
 
