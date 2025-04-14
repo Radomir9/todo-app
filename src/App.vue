@@ -11,21 +11,21 @@
     <section>
       <h3>CREATE A TODO</h3>
 
-      <form> 
+      <form @submit.prevent="addTodo"> 
         <h4>What's on your todo list?</h4>
-        <input type="text" name="content" id="content" placeholder="e.g. make a video" />
+        <input type="text" name="content" id="content" placeholder="e.g. make a video" v-model="input_content"/>
 
         <h4>Pick a category</h4>
         <div>
 
           <label>
-            <input type="radio" name="category" id="category1" value="business" />
+            <input type="radio" name="category" id="category1" value="business" v-model="input_category" />
             <!-- <span></span> -->
             <div>Business</div>
           </label>
 
           <label>
-            <input type="radio" name="category" id="category2" value="personal" />
+            <input type="radio" name="category" id="category2" value="personal" v-model="input_category" />
             <!-- <span></span> -->
             <div>Personal</div>
           </label>
@@ -65,6 +65,10 @@
 import { ref, watch, onMounted } from 'vue'
 
 const name = ref('')
+const todos = ref([])
+
+const input_category = ref(null)
+const input_content = ref('')
 
 
 watch(name, (newVal) => {
@@ -75,6 +79,19 @@ onMounted(() => {
   name.value = localStorage.getItem('name') || ''
 }) 
 
+const addTodo = () => {
+  if(input_content.value.trim() === '' || input_category.value === null){
+    return 
+  } 
+  todos.value.push({
+    content: input_content.value,
+    category: input_category.value,
+    done: false
+  })
+
+  input_category.value = null
+  input_content.value = ''
+}
 </script>
 
 <style scoped></style>
