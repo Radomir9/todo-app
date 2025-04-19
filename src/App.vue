@@ -40,25 +40,34 @@
         <section>
             <h3 class="font-bold pb-4">TODO LIST</h3>
             <transition-group name="todo" tag="div">
-                <div v-if="todos.length === 0" class="text-gray-500 text-center mt-4">
-                    No todos yet. Add your first one! 🚀
-                </div>
                 <div v-for="todo in todos" :key="todo.id"
-                    class="flex items-center justify-between bg-white shadow p-4 mb-2 rounded">
-                    <div>
-                        <p class="font-medium">{{ todo.content }}</p>
-                        <p :class="todo.category === 'business' ? 'text-blue-500' : 'text-pink-500'">{{ todo.category }}
-                        </p>
+                    class="flex items-center justify-between bg-white shadow-sm p-4 mb-2 rounded-xl hover:shadow-md transition">
+                    <div class="flex items-start gap-4 w-full">
+                        <button @click="todo.done = !todo.done"
+                            class="w-6 h-6 flex items-center justify-center rounded-full border-2 transition-all duration-200"
+                            :class="todo.done ? 'bg-blue-500 border-blue-500' : 'border-gray-300'">
+                            <svg v-if="todo.done" class="h-4 w-4 text-white"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                        <div class="flex flex-col">
+                            <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'"
+                                class="font-semibold text-base">
+                                {{ todo.content }}
+                            </p>
+                            <p :class="todo.category === 'business' ? 'text-blue-500' : 'text-pink-500'"
+                                class="text-sm mt-1">
+                                {{ todo.category }}
+                            </p>
+                        </div>
                     </div>
-
-                    <button @click="removeTodo(todo)" class="text-red-500 hover:text-red-700">Delete</button>
+                    <button @click="removeTodo(todo)" class="text-gray-400 hover:text-red-500 transition ml-4 cursor-po">
+                        🗑️
+                    </button>
                 </div>
-                <p class="text-sm text-gray-500 mt-4">
-                    Total: {{ todos.length }} tasks
-                </p>
             </transition-group>
         </section>
-
     </main>
 </template>
 
