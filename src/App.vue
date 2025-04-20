@@ -24,6 +24,23 @@
                     class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pick a priority</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" value="low" v-model="input_priority" />
+                            <span class="text-sm font-medium">Low</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" value="medium" v-model="input_priority" />
+                            <span class="text-sm font-medium">Medium</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" value="high" v-model="input_priority" />
+                            <span class="text-sm font-medium">High</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pick a category</label>
                     <div class="flex gap-4">
                         <label class="flex items-center gap-2 cursor-pointer">
@@ -36,6 +53,7 @@
                         </label>
                     </div>
                 </div>
+
 
                 <input type="submit" value="Add todo"
                     class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition" />
@@ -56,7 +74,7 @@
                 </select>
             </div>
             <transition-group name="todo" tag="div">
-                <div v-for="todo in filteredTodos" :key="todo.id"
+                <div v-for="todo in sortedAndFilteredTodos" :key="todo.id"
                     class="flex items-center justify-between bg-white shadow-sm p-4 mb-2 rounded-xl hover:shadow-md transition">
                     <div class="flex items-start gap-4 w-full">
                         <button @click="todo.done = !todo.done"
@@ -68,29 +86,47 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                         </button>
-                        <div class="flex flex-col">
-                            <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'
-                                " class="font-semibold text-base">
-                                {{ todo.content }}
-                            </p>
-                            <p :class="todo.category === 'business'
-                                    ? 'text-blue-500'
-                                    : 'text-pink-500'
-                                " class="text-sm mt-1">
-                                {{ todo.category }}
-                            </p>
-                        </div>
+                        <div class="flex flex-col gap-1">
+  <div class="flex items-center gap-2">
+    <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'"
+       class="font-semibold text-base">
+      {{ todo.content }}
+    </p>
+    <span
+  :class="[
+    'flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full capitalize',
+    todo.priority === 'low' && 'bg-green-100 text-green-600',
+    todo.priority === 'medium' && 'bg-yellow-100 text-yellow-600',
+    todo.priority === 'high' && 'bg-red-100 text-red-600'
+  ]"
+>
+  <svg v-if="todo.priority === 'low'" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 2a8 8 0 100 16 8 8 0 000-16z" />
+  </svg>
+  <svg v-else-if="todo.priority === 'medium'" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 2a8 8 0 100 16 8 8 0 000-16z" />
+  </svg>
+  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+    <path fill-rule="evenodd" d="M10 2a8 8 0 11-6.472 12.972l-.528.528a1 1 0 01-1.414-1.414l.528-.528A8 8 0 0110 2zm0 5a1 1 0 00-.993.883L9 8v4a1 1 0 001.993.117L11 12V8a1 1 0 00-1-1zm0 8a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
+  </svg>
+  {{ todo.priority }}
+</span>
+  </div>
+  <p :class="todo.category === 'business'
+              ? 'text-blue-500'
+              : 'text-pink-500'"
+     class="text-sm">
+    {{ todo.category }}
+  </p>
+</div>
                     </div>
                     <button @click="removeTodo(todo)"
                         class="text-gray-400 hover:text-red-500 transition ml-4 cursor-pointer">
                         🗑️
                     </button>
                 </div>
-                
+
             </transition-group>
-            <p class="text-sm text-gray-500 mt-4">
-                     Total: {{ todos.length }} tasks
-                 </p>
         </section>
     </main>
 </template>
@@ -104,20 +140,21 @@ const todos = ref([]);
 const input_category = ref(null);
 const input_content = ref("");
 
+const input_priority = ref('medium')
+
 const filter = ref('all')
 
-const filteredTodos = computed(() => {
-    if(filter.value === 'all'){
-        return todos.value
-    }
-    if(filter.value === 'done') {
-        return todos.value.filter(todo => todo.done)
-    }
-    if(filter.value === 'notDone') {
-        return todos.value.filter(todo => !todo.done)
-    }
-    return todos.value.filter(todo => todo.category === filter.value)
-})
+const sortedAndFilteredTodos = computed(() => {
+    const filtered = (() => {
+        if (filter.value === 'all') return todos.value;
+        if (filter.value === 'done') return todos.value.filter(todo => todo.done);
+        if (filter.value === 'notDone') return todos.value.filter(todo => !todo.done);
+        return todos.value.filter(todo => todo.category === filter.value);
+    })();
+
+    const priorities = ['high', 'medium', 'low'];
+    return filtered.sort((a, b) => priorities.indexOf(a.priority) - priorities.indexOf(b.priority));
+});
 
 watch(name, (newVal) => {
     localStorage.setItem("name", newVal);
@@ -140,6 +177,7 @@ onMounted(() => {
 
 const addTodo = () => {
     if (input_content.value.trim() === "" || input_category.value === null) {
+        alert("Please enter content and choose a category.")
         return;
     }
     todos.value.push({
@@ -147,11 +185,15 @@ const addTodo = () => {
         content: input_content.value,
         category: input_category.value,
         done: false,
+        priority: input_priority.value
     });
 
     input_category.value = null;
     input_content.value = "";
+    input_priority.value = "medium"
 };
+
+
 
 const removeTodo = (todo) => {
     todos.value = todos.value.filter((t) => t !== todo);
