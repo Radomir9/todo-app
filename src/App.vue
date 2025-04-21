@@ -19,8 +19,8 @@
                             : "What's on your todo list?"
                     }}
                 </h4>
-                <input type="text" name="content" autocomplete="off" id="content" placeholder="e.g. make a video"
-                    v-model="input_content"
+                <input type="text" v-model="input_content" ref="todoInput" @keyup.enter="addTodo"
+                    placeholder="Task content"
                     class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
 
                 <div>
@@ -74,8 +74,10 @@
                 </select>
             </div>
             <transition-group name="todo" tag="div">
-                <div v-for="todo in sortedAndFilteredTodos" :key="todo.id"
-                    class="flex items-center justify-between bg-white shadow-sm p-4 mb-2 rounded-xl hover:shadow-md transition">
+                <div v-for="todo in sortedAndFilteredTodos" :key="todo.id" :class="[
+                    'flex items-center justify-between bg-white shadow-sm p-4 mb-2 rounded-xl hover:shadow-md transition',
+                    todo.done && 'opacity-50'
+                ]">
                     <div class="flex items-start gap-4 w-full">
                         <button @click="todo.done = !todo.done"
                             class="w-6 h-6 flex items-center justify-center rounded-full border-2 transition-all duration-200"
@@ -87,38 +89,40 @@
                             </svg>
                         </button>
                         <div class="flex flex-col gap-1">
-  <div class="flex items-center gap-2">
-    <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'"
-       class="font-semibold text-base">
-      {{ todo.content }}
-    </p>
-    <span
-  :class="[
-    'flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full capitalize',
-    todo.priority === 'low' && 'bg-green-100 text-green-600',
-    todo.priority === 'medium' && 'bg-yellow-100 text-yellow-600',
-    todo.priority === 'high' && 'bg-red-100 text-red-600'
-  ]"
->
-  <svg v-if="todo.priority === 'low'" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M10 2a8 8 0 100 16 8 8 0 000-16z" />
-  </svg>
-  <svg v-else-if="todo.priority === 'medium'" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M10 2a8 8 0 100 16 8 8 0 000-16z" />
-  </svg>
-  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-    <path fill-rule="evenodd" d="M10 2a8 8 0 11-6.472 12.972l-.528.528a1 1 0 01-1.414-1.414l.528-.528A8 8 0 0110 2zm0 5a1 1 0 00-.993.883L9 8v4a1 1 0 001.993.117L11 12V8a1 1 0 00-1-1zm0 8a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
-  </svg>
-  {{ todo.priority }}
-</span>
-  </div>
-  <p :class="todo.category === 'business'
-              ? 'text-blue-500'
-              : 'text-pink-500'"
-     class="text-sm">
-    {{ todo.category }}
-  </p>
-</div>
+                            <div class="flex items-center gap-2">
+                                <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'"
+                                    class="font-semibold text-base">
+                                    {{ todo.content }}
+                                </p>
+                                <span :class="[
+                                    'flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full capitalize',
+                                    todo.priority === 'low' && 'bg-green-100 text-green-600',
+                                    todo.priority === 'medium' && 'bg-yellow-100 text-yellow-600',
+                                    todo.priority === 'high' && 'bg-red-100 text-red-600'
+                                ]">
+                                    <svg v-if="todo.priority === 'low'" xmlns="http://www.w3.org/2000/svg"
+                                        class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16z" />
+                                    </svg>
+                                    <svg v-else-if="todo.priority === 'medium'" xmlns="http://www.w3.org/2000/svg"
+                                        class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16z" />
+                                    </svg>
+                                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 2a8 8 0 11-6.472 12.972l-.528.528a1 1 0 01-1.414-1.414l.528-.528A8 8 0 0110 2zm0 5a1 1 0 00-.993.883L9 8v4a1 1 0 001.993.117L11 12V8a1 1 0 00-1-1zm0 8a1 1 0 100 2 1 1 0 000-2z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ todo.priority }}
+                                </span>
+                            </div>
+                            <p :class="todo.category === 'business'
+                                ? 'text-blue-500'
+                                : 'text-pink-500'" class="text-sm">
+                                {{ todo.category }}
+                            </p>
+                        </div>
                     </div>
                     <button @click="removeTodo(todo)"
                         class="text-gray-400 hover:text-red-500 transition ml-4 cursor-pointer">
@@ -128,11 +132,14 @@
 
             </transition-group>
         </section>
+        <div class="text-sm text-gray-600 mb-4">
+            Completed: {{todos.filter(todo => todo.done).length}} / {{ todos.length }} tasks
+        </div>
     </main>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, watch, onMounted, computed, nextTick } from "vue";
 
 const name = ref("");
 const todos = ref([]);
@@ -142,7 +149,11 @@ const input_content = ref("");
 
 const input_priority = ref('medium')
 
+const todoInput = ref(null);
+
 const filter = ref('all')
+
+
 
 const sortedAndFilteredTodos = computed(() => {
     const filtered = (() => {
@@ -173,6 +184,9 @@ watch(
 onMounted(() => {
     name.value = localStorage.getItem("name") || "";
     todos.value = JSON.parse(localStorage.getItem("todos")) || [];
+    nextTick(() => {
+        todoInput.value?.focus()
+    });
 });
 
 const addTodo = () => {
