@@ -122,6 +122,10 @@
                                 : 'text-pink-500'" class="text-sm">
                                 {{ todo.category }}
                             </p>
+                            <p class="text-xs text-gray-400">
+                                Added: {{ new Date(todo.createdAt).toLocaleString() }}
+                            </p>
+                            
                         </div>
                     </div>
                     <button @click="removeTodo(todo)"
@@ -199,7 +203,8 @@ const addTodo = () => {
         content: input_content.value,
         category: input_category.value,
         done: false,
-        priority: input_priority.value
+        priority: input_priority.value,
+        createdAt: new Date().toISOString()
     });
 
     input_category.value = null;
