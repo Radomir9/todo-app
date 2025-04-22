@@ -54,10 +54,17 @@
                     </div>
                 </div>
 
+                <div class="flex items-center justify-between mt-4">
+                    <input type="submit" value="Add todo"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition" />
+                    <button @click="clearCompleted" type="button"
+                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition cursor-pointer">
+                        Clear Completed
+                    </button>
+                </div>
 
-                <input type="submit" value="Add todo"
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition" />
             </form>
+
         </section>
 
         <section>
@@ -125,7 +132,7 @@
                             <p class="text-xs text-gray-400">
                                 Added: {{ new Date(todo.createdAt).toLocaleString() }}
                             </p>
-                            
+
                         </div>
                     </div>
                     <button @click="removeTodo(todo)"
@@ -217,6 +224,10 @@ const addTodo = () => {
 const removeTodo = (todo) => {
     todos.value = todos.value.filter((t) => t !== todo);
 };
+
+const clearCompleted = () => {
+    todos.value = todos.value.filter(todo => !todo.done)
+}
 </script>
 
 <style scoped>
