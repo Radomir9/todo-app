@@ -73,6 +73,7 @@
                 <label for="filter" class="text-sm font-medium text-gray-700">Filter tasks</label>
                 <select v-model="filter" id="filter"
                     class="w-full border border-gray-300 rounded px-3 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option disabled value="">-- Filter tasks --</option>
                     <option value="all">All</option>
                     <option value="done">Completed</option>
                     <option value="notDone">Not completed</option>
@@ -82,7 +83,7 @@
             </div>
             <transition-group name="todo" tag="div">
                 <div v-for="todo in sortedAndFilteredTodos" :key="todo.id" :class="[
-                    'flex items-center justify-between bg-white shadow-sm p-4 mb-2 rounded-xl hover:shadow-md transition',
+                    'flex items-center justify-between bg-white shadow-sm p-4 mb-2 rounded-xl transition-transform transform hover:scale-[1.01]',
                     todo.done && 'opacity-50'
                 ]">
                     <div class="flex items-start gap-4 w-full">
@@ -162,7 +163,7 @@ const input_priority = ref('medium')
 
 const todoInput = ref(null);
 
-const filter = ref('all')
+const filter = ref('')
 
 
 
