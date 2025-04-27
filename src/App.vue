@@ -19,7 +19,7 @@
                             : "What's on your todo list?"
                     }}
                 </h4>
-                <input type="text" v-model="input_content" ref="todoInput" @keyup.enter="addTodo"
+                <input type="text" autocomplete="off" v-model="input_content" ref="todoInput" @keyup.enter="addTodo"
                     placeholder="Task content"
                     class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
 
@@ -59,7 +59,7 @@
                         class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition" />
                     <button @click="clearCompleted" type="button"
                         class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition cursor-pointer">
-                        Clear Completed
+                        Clear Completed Tasks
                     </button>
                 </div>
 
