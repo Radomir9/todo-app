@@ -222,6 +222,10 @@ const addTodo = () => {
     input_category.value = null;
     input_content.value = "";
     input_priority.value = "medium"
+
+    nextTick(() => {
+        todoInput.value?.focus()
+    });
 };
 
 
