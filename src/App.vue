@@ -167,7 +167,7 @@ const input_priority = ref('medium')
 
 const todoInput = ref(null);
 
-const filter = ref('')
+const filter = ref('all')
 
 
 
