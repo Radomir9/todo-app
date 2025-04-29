@@ -98,10 +98,19 @@
                         </button>
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-2">
-                                <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'"
-                                    class="font-semibold text-base">
-                                    {{ todo.content }}
-                                </p>
+                                <div class="flex items-center gap-2">
+                                    <p :class="todo.done ? 'line-through text-gray-400' : 'text-gray-800'"
+                                        class="font-semibold text-base">
+                                        {{ todo.content }}
+                                    </p>
+                                    <span :class="[
+                                        'text-xs font-semibold px-2 py-0.5 rounded-full capitalize',
+                                        todo.category === 'business' && 'bg-blue-100 text-blue-600',
+                                        todo.category === 'personal' && 'bg-pink-100 text-pink-600'
+                                    ]">
+                                        {{ todo.category }}
+                                    </span>
+                                </div>
                                 <span :class="[
                                     'flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full capitalize',
                                     todo.priority === 'low' && 'bg-green-100 text-green-600',
@@ -125,11 +134,6 @@
                                     {{ todo.priority }}
                                 </span>
                             </div>
-                            <p :class="todo.category === 'business'
-                                ? 'text-blue-500'
-                                : 'text-pink-500'" class="text-sm">
-                                {{ todo.category }}
-                            </p>
                             <p class="text-xs text-gray-400">
                                 Added: {{ new Date(todo.createdAt).toLocaleString() }}
                             </p>
