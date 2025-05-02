@@ -147,6 +147,9 @@
                 </div>
 
             </transition-group>
+            <div v-if="sortedAndFilteredTodos.length === 0" class="text-center text-gray-500 py-4">
+                No tasks found.
+            </div>
         </section>
         <div class="text-sm text-gray-600 mb-4">
             Completed: {{todos.filter(todo => todo.done).length}} / {{ todos.length }} tasks
