@@ -3,10 +3,10 @@
         <section class="text-center">
             <h2 class="text-3xl font-bold mb-2">
                 What's up,
-                <input type="text" id="name" placeholder="Name here" v-model="name" autocomplete="off"
+                <input type="text" id="name" :placeholder="name ? '' : 'Name here'" v-model="name" autocomplete="off"
                     class="inline-block text-blue-500 bg-transparent border-b-2 border-blue-400 focus:outline-none focus:border-blue-600 px-2 py-1" />
             </h2>
-        </section>
+        </section> 
 
         <section class="bg-white shadow rounded-lg p-6 space-y-4">
             <h3 class="text-xl font-semibold text-blue-600">CREATE A TODO</h3>
