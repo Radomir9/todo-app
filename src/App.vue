@@ -14,9 +14,7 @@
             <form @submit.prevent="addTodo" class="space-y-4">
                 <h4 class="block text-sm font-medium text-gray-700 mb-1">
                     {{
-                        name
-                            ? `${name}, what's on your todo list?`
-                            : "What's on your todo list?"
+                        `${displayName}, what's on your todo list?`
                     }}
                 </h4>
                 <input type="text" autocomplete="off" v-model="input_content" ref="todoInput" @keyup.enter="addTodo"
@@ -171,6 +169,8 @@ const input_priority = ref('medium')
 const todoInput = ref(null);
 
 const filter = ref('all')
+
+const displayName = computed(() => name.value.trim() || "Friend");
 
 
 
